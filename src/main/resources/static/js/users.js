@@ -76,13 +76,15 @@ function loadUsersList(users) {
     }
 }
 
-function loadPageContent() {
+function loadPageContent(isInitPage = false) {
     fetch('/api/users').then(function (response){
         if(response.ok) {
             response.json().then(users => {
                 loadUsersList(users);
                 loadAdminTable(users);
-                selectUserInList();
+                if(isInitPage) {
+                    selectUserInList();
+                }
             });
         } else {
             console.error(`Network request for users.json failed with response ${response.status}: ${response.statusText}`);
@@ -176,6 +178,6 @@ $(document).on('click', '.users-list  a[type="button"]', function (){
 // Инициализация при загрузке документа
 $(document).ready(
     () => {
-        loadPageContent();
+        loadPageContent(true);
     }
 );
