@@ -25,6 +25,13 @@ public class RoleServiceImp implements RoleService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<String> rolesList() {
+        return getAllRoles().stream().map(Role::toString).toList();
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
     public Role getByName(String roleName) {
         return roleRepository.findRoleByName(roleName);
     }

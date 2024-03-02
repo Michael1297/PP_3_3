@@ -2,15 +2,16 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -26,7 +27,7 @@ public class UserServiceImp implements UserService {
    @Transactional
    @Override
    public void add(User user) {
-      if (findUserByEmail(user.getEmail()) == null) {
+      if (userRepository.findUserByEmail(user.getEmail()).isEmpty()) {
          user.setPassword(passwordEncoder.encode(user.getPassword()));
          userRepository.save(user);
       }
@@ -41,12 +42,14 @@ public class UserServiceImp implements UserService {
    @Transactional(readOnly = true)
    @Override
    public User getUser(long id) {
-      return userRepository.findById(id).orElse(null);
+      Optional<User> foundUser = userRepository.findById(id);
+      return foundUser.orElseThrow(UserNotFoundException::new);
    }
 
    @Override
    public User findUserByEmail(String email) {
-      return userRepository.findUserByEmail(email);
+      Optional<User> foundUser = userRepository.findUserByEmail(email);
+      return foundUser.orElseThrow(UserNotFoundException::new);
    }
 
    @Transactional
@@ -76,13 +79,8 @@ public class UserServiceImp implements UserService {
 
    @Transactional(readOnly = true)
    @Override
-   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      User user = findUserByEmail(username);
-
-      if (user == null) {
-         throw new UsernameNotFoundException("User " + username + " not found");
-      }
-
-      return user;
+   public User loadUserByUsername(String username) throws UsernameNotFoundException {
+      Optional<User> foundUser = userRepository.findUserByEmail(username);
+      return foundUser.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
    }
 }
