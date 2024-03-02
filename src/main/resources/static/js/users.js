@@ -61,12 +61,17 @@ function loadAdminTable(users) {
     }
 }
 
+function selectUserInList() {
+    const id = $('.users-list').attr('data-admin-id');
+    $(`.users-list > nav > a[id="${id}"]`).toggleClass('btn-light btn-primary');
+}
+
 function loadUsersList(users) {
     const $nav = $('.users-list > nav');
     $nav.empty();
 
     for (const user of users) {
-        const button = `<a type="button" class="btn bg-white pl-5 pr-5" id="${user.id}">${user.email}</a>`
+        const button = `<a type="button" class="btn btn-light pl-5 pr-5" id="${user.id}">${user.email}</a>`;
         $nav.append(button);
     }
 }
@@ -77,6 +82,7 @@ function loadPageContent() {
             response.json().then(users => {
                 loadUsersList(users);
                 loadAdminTable(users);
+                selectUserInList();
             });
         } else {
             console.error(`Network request for users.json failed with response ${response.status}: ${response.statusText}`);

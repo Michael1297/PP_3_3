@@ -16,16 +16,8 @@
 
     <div class="container-fluid d-flex flex-row vh-100 p-0" >
         <!-- Список пользователей -->
-        <div class="users-list bg-white">
-            <nav class="btn-group-vertical mt-3 mb-3">
-                <a type="button" class="btn pl-5 pr-5"
-                    th:each="currentUser: ${usersList}"
-                    th:name="${currentUser.email}"
-                    th:text="${currentUser.email}"
-                    th:data-user="${currentUser}"
-                    th:classappend="${#strings.equals(user.email, currentUser.email)} ? 'btn-primary' : 'btn-light'">
-                </a>
-            </nav>
+        <div class="users-list bg-white" th:data-admin-id="${user.id}">
+            <nav class="btn-group-vertical mt-3 mb-3"></nav>
         </div>
 
         <div class="flex-grow-1 bg-light p-3">
