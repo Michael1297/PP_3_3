@@ -12,17 +12,5 @@
         <th>Delete</th>
     </tr>
     </thead>
-    <tbody>
-    <!-- Вывод пользователей -->
-    <tr th:each="user:${usersList}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.firstName}"></td>
-        <td th:text="${user.lastName}"></td>
-        <td th:text="${user.age}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${#strings.setJoin(user.roles, ' ')}"></td>
-        <td><button class = "btn update btn-info" th:name="${user.email}">Edit</button></td>
-        <td><button class = "btn remove btn-danger" th:name="${user.email}">Delete</button></td>
-    </tr>
-    </tbody>
+    <tbody></tbody>
 </table>
