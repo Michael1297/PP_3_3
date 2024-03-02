@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -131,13 +132,17 @@ public class User implements UserDetails {
       return roles;
    }
 
+   public void setRoles(Set<Role> roles) {
+      this.roles = roles;
+   }
+
    //получить список ролей содержащий только с их названия
    public List<String> getRolesList() {
       return roles.stream().map(Role::toString).toList();
    }
 
-   public void setRoles(Set<Role> roles) {
-      this.roles = roles;
+   public void setRolesList(List<String> roles) {
+      this.roles = roles.stream().map(role -> "ROLE_" + role).map(Role::new).collect(Collectors.toSet());
    }
 
    @Override

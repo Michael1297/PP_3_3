@@ -32,83 +32,107 @@ function updateUserTable(user) {
     $table.append(row);
 }
 
-$(function(){
-    //нажатие на кнопку обновить в таблице администратора
-    $("button.btn.update").click(function(){
-        //получить имя пользователя
-        const userName = $(this).attr('name');
-        //получить данные пользователя
-        const userData = $(`.users-list  a[type="button"][name="${userName}"]`).attr('data-user');
+function loadAdminTable(users) {
+    //TODO
+}
 
-        const user = JSON.parse(userData);
-        const $modal = createModal(user);
+function loadUsersList(users) {
+    //TODO
+}
 
-        //указание ссылки на изменения данных при нажатии на кнопку
-        $modal.find('form').attr('action', `./edit/${user.id}`);
-        $modal.find('form').attr('method', 'POST');
-
-        //добавить кнопку
-        const button = $('<button type="submit" class="btn btn-primary">Edit</button>');
-        $modal.find('.modal-footer').append(button);
-
-        //Заголовок модального окна
-        const title = $('<h4 class="modal-title">Edit User</h4>');
-        $modal.find('.modal-header').append(title);
-
-        //show dialog
-        $modal.modal();
-    });
-
-    //нажатие на кнопку удалить в таблице администратора
-    $("button.btn.remove").click(function() {
-        //получить имя пользователя
-        const userName = $(this).attr('name');
-        //получить данные пользователя
-        const userData = $(`.users-list  a[type="button"][name="${userName}"]`).attr('data-user');
-
-        const user = JSON.parse(userData);
-        const $modal = createModal(user);
-
-        //выключить поля
-        $modal.find('[name="firstName"]').prop('disabled', true);
-        $modal.find('[name="lastName"]').prop('disabled', true);
-        $modal.find('[name="age"]').prop('disabled', true);
-        $modal.find('[name="email"]').prop('disabled', true);
-        $modal.find('[name="password"]').prop('disabled', true);
-        $modal.find('[name="roles"]').prop('disabled', true);
-
-        //указание ссылки на изменения данных при нажатии на кнопку
-        $modal.find('form').attr('action', `./remove/${user.id}`);
-        $modal.find('form').attr('method', 'GET');
-
-        //добавить кнопку
-        const button = $('<button type="submit" class="btn btn-danger">Delete</button>');
-        $modal.find('.modal-footer').append(button);
-
-        //Заголовок модального окна
-        const title = $('<h4 class="modal-title">Delete User</h4>');
-        $modal.find('.modal-header').append(title);
-
-        //show dialog
-        $modal.modal();
-    });
-
-    //нажатие на одного из пользователей в списке
-    $('.users-list  a[type="button"]').click(function(){
-        const $btn = $(this);
-
-        //заменить btn-light на btn-primary
-        $('.users-list  a[type="button"][class*="btn-primary"]').toggleClass('btn-primary btn-light');
-        $btn.toggleClass('btn-light btn-primary');
-
-        const user = JSON.parse($btn.attr('data-user'));
-        if(user.rolesList.includes('ADMIN')) {
-            $('.admin-panel').css('display', 'block');
-            $('.user-panel').css('display', 'none');
-        } else {
-            $('.admin-panel').css('display', 'none');
-            $('.user-panel').css('display', 'block');
-            updateUserTable(user);
+function loadPageContent() {
+    fetch('/api/users').then(function (response){
+        if(response.ok) {
+            response.json().then(users => {
+                loadUsersList(users);
+                loadAdminTable(users);
+            });
         }
     });
+}
+
+//нажатие на кнопку обновить в таблице администратора
+$("button.btn.update").click(function(){
+    //получить имя пользователя
+    const userName = $(this).attr('name');
+    //получить данные пользователя
+    const userData = $(`.users-list  a[type="button"][name="${userName}"]`).attr('data-user');
+
+    const user = JSON.parse(userData);
+    const $modal = createModal(user);
+
+    //указание ссылки на изменения данных при нажатии на кнопку
+    $modal.find('form').attr('action', `./edit/${user.id}`);
+    $modal.find('form').attr('method', 'POST');
+
+    //добавить кнопку
+    const button = $('<button type="submit" class="btn btn-primary">Edit</button>');
+    $modal.find('.modal-footer').append(button);
+
+    //Заголовок модального окна
+    const title = $('<h4 class="modal-title">Edit User</h4>');
+    $modal.find('.modal-header').append(title);
+
+    //show dialog
+    $modal.modal();
 });
+
+//нажатие на кнопку удалить в таблице администратора
+$("button.btn.remove").click(function() {
+    //получить имя пользователя
+    const userName = $(this).attr('name');
+    //получить данные пользователя
+    const userData = $(`.users-list  a[type="button"][name="${userName}"]`).attr('data-user');
+
+    const user = JSON.parse(userData);
+    const $modal = createModal(user);
+
+    //выключить поля
+    $modal.find('[name="firstName"]').prop('disabled', true);
+    $modal.find('[name="lastName"]').prop('disabled', true);
+    $modal.find('[name="age"]').prop('disabled', true);
+    $modal.find('[name="email"]').prop('disabled', true);
+    $modal.find('[name="password"]').prop('disabled', true);
+    $modal.find('[name="roles"]').prop('disabled', true);
+
+    //указание ссылки на изменения данных при нажатии на кнопку
+    $modal.find('form').attr('action', `./remove/${user.id}`);
+    $modal.find('form').attr('method', 'GET');
+
+    //добавить кнопку
+    const button = $('<button type="submit" class="btn btn-danger">Delete</button>');
+    $modal.find('.modal-footer').append(button);
+
+    //Заголовок модального окна
+    const title = $('<h4 class="modal-title">Delete User</h4>');
+    $modal.find('.modal-header').append(title);
+
+    //show dialog
+    $modal.modal();
+});
+
+//нажатие на одного из пользователей в списке
+$('.users-list  a[type="button"]').click(function(){
+    const $btn = $(this);
+
+    //заменить btn-light на btn-primary
+    $('.users-list  a[type="button"][class*="btn-primary"]').toggleClass('btn-primary btn-light');
+    $btn.toggleClass('btn-light btn-primary');
+
+    const user = JSON.parse($btn.attr('data-user'));
+    if(user.rolesList.includes('ADMIN')) {
+        $('.admin-panel').css('display', 'block');
+        $('.user-panel').css('display', 'none');
+    } else {
+        $('.admin-panel').css('display', 'none');
+        $('.user-panel').css('display', 'block');
+        updateUserTable(user);
+    }
+});
+
+// Инициализация при загрузке документа
+$(document).ready(
+    () => {
+
+    }
+);

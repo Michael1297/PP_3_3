@@ -88,7 +88,6 @@ public class RESTController  {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
     @ExceptionHandler
     private ResponseEntity<UserErrorResponse> handleException(UserNotFoundException e) {
         UserErrorResponse response = new UserErrorResponse("User not found!", System.currentTimeMillis());
