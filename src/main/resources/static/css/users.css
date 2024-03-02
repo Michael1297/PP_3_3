@@ -1,0 +1,13 @@
+body {
+    background-color: #F8F9FA;
+}
+
+label {
+    display: grid;
+    justify-content: space-around;
+}
+
+.btn-close {
+    background-color: gray;
+    border-color: gray;
+}

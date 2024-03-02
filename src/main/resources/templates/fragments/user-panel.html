@@ -1,0 +1,13 @@
+<div th:fragment="user-panel" class="user-panel">
+  <h1>User information-page</h1>
+
+  <div class="container-fluid">
+    <div class="row border">
+      <h5 class="m-2">About user</h5>
+    </div>
+    <div class="row border bg-white pb-2">
+      <!-- Таблица с информацией о пользователе -->
+      <div th:replace="fragments/user-table :: user-table"></div>
+    </div>
+  </div>
+</div>

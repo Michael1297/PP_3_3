@@ -1,0 +1,108 @@
+<!-- Форма для ввода данных -->
+<div th:fragment="modal-form" id="modalForm" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex flex-row-reverse align-items-center">
+                <button class="close" data-dismiss="modal">✕</button>
+            </div>
+
+            <form>
+                <input th:name="${_csrf.parameterName}" type="hidden" th:value="${_csrf.token}" />
+
+                <div class ="form-group">
+                    <label><strong> ID </strong></label>
+                    <label>
+                        <input
+                                disabled type = "number"
+                                name = "id"
+                                class = "form-control"
+                                placeholder="User Id"
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label><strong> First Name </strong></label>
+                    <label>
+                        <input
+                                type = "text"
+                                name = "firstName"
+                                class = "form-control"
+                                placeholder="Enter User First Name"
+                                required
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label><strong> Last Name </strong></label>
+                    <label>
+                        <input
+                                type = "text"
+                                name = "lastName"
+                                class = "form-control"
+                                placeholder="Enter User Last Name"
+                                required
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label><strong> Age </strong></label>
+                    <label>
+                        <input
+                                type = "number"
+                                name = "age"
+                                class = "form-control"
+                                placeholder="Enter User Age"
+                                min="0"
+                                required
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label><strong> Email </strong></label>
+                    <label>
+                        <input
+                                type = "text"
+                                name = "email"
+                                class = "form-control"
+                                placeholder="Enter User Email"
+                                pattern="(\w+)@(\w+)(\.)(\w+)"
+                                required
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label><strong> Password </strong></label>
+                    <label>
+                        <input
+                                type = "password"
+                                name = "password"
+                                class = "form-control"
+                                placeholder="Enter User Password"
+                                required
+                        />
+                    </label>
+                </div>
+
+                <div class ="form-group">
+                    <label for="user-roles"><strong> Role </strong></label>
+                    <select multiple class="form-control" id="user-roles" name="roles" required>
+                        <option th:each="role: ${roles}"
+                                th:value="${role.id}"
+                                th:text="${role}"
+                        >
+                        </option>
+                    </select>
+                </div>
+
+                <div class = "modal-footer">
+                    <button class="btn btn-close btn-primary" data-dismiss="modal"> Close </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

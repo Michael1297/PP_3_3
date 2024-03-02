@@ -1,0 +1,21 @@
+<!-- Таблица пользователей которая доступна пользователю -->
+<table th:fragment="user-table" class="table table-striped m-3">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody th:object = "${user}">
+    <td th:text="${user.id}"></td>
+    <td th:text="${user.firstName}"></td>
+    <td th:text="${user.lastName}"></td>
+    <td th:text="${user.age}"></td>
+    <td th:text="${user.email}"></td>
+    <td th:text="${#strings.setJoin(user.roles, ' ')}"></td>
+    </tbody>
+</table>

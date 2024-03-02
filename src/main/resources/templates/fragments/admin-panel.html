@@ -1,0 +1,30 @@
+<div th:fragment="admin-panel" class="admin-panel">
+    <h1>Admin panel</h1>
+    <nav>
+        <div class="nav nav-tabs border-bottom-0" role="tablist">
+            <a class="nav-link active" data-toggle="tab" href="#table" role="tab">Users table</a>
+            <a class="nav-link" data-toggle="tab" href="#create" role="tab">New user</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid tab-content">
+        <div role="tabpanel" class="tab-pane fade show active" id="table">
+            <div class="row border">
+                <h5 class="m-2">All users</h5>
+            </div>
+            <div class="row border bg-white pb-2">
+                <!-- Таблица пользователей которая доступна админу -->
+                <div th:replace="fragments/admin-table :: admin-table"></div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="create">
+            <div class="row border">
+                <h5 class="m-2">Add new user</h5>
+            </div>
+            <div class="row border create-form bg-white pb-2">
+                <!-- Форма для создания пользователя -->
+                <div th:replace="fragments/create-form :: create-form"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<!-- Заголовок окна -->
+<header th:fragment="header">
+    <div class="container-fluid" th:object = "${user}">
+        <dl class="row p-2 bg-dark">
+            <div class="col-11 text-left">
+                <span class="text-white" style="font-size: large">
+                    <strong><a th:text="${user.email}"></a></strong>
+                    with roles:
+                    <a th:text="${#strings.setJoin(user.roles, ' ')}"></a>
+                </span>
+            </div>
+            <form id="logout-form" th:action= "@{/logout}" method="POST">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class = "btn btn-link" style="color: darkgray">Logout</button>
+            </form>
+        </dl>
+    </div>
+</header>
