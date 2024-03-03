@@ -16,10 +16,8 @@
 
     <div class="container-fluid d-flex flex-row vh-100 p-0" >
         <!-- Список пользователей -->
-        <div class="users-list bg-white">
-            <nav class="btn-group-vertical mt-3 mb-3">
-                <a type="button" class="btn btn-primary pl-5 pr-5" th:text="${user.email}"></a>
-            </nav>
+        <div class="users-list bg-white" th:data-user-id="${user.id}">
+            <nav class="btn-group-vertical mt-3 mb-3"></nav>
         </div>
 
         <div class="flex-grow-1 bg-light p-3">
@@ -31,5 +29,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
+    <script type="module" src="/js/user.js"></script>
 </body>
 </html>
