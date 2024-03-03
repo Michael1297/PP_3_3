@@ -22,29 +22,51 @@ async function getUser(id) {
     return await response.json();
 }
 
-async function updateUser($modalForm) {
+//получить данные из формы
+function retrieveData($form) {
     const json = {};
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json; charset=utf-8');
 
-    json.id = parseInt($modalForm.find('[name="id"]').val());
-    json.firstName = $modalForm.find('[name="firstName"]').val();
-    json.lastName = $modalForm.find('[name="lastName"]').val();
-    json.age = parseInt($modalForm.find('[name="age"]').val());
-    json.email = $modalForm.find('[name="email"]').val();
-    json.password = $modalForm.find('[name="password"]').val();
+    json.id = parseInt($form.find('[name="id"]').val());
+    json.firstName = $form.find('[name="firstName"]').val();
+    json.lastName = $form.find('[name="lastName"]').val();
+    json.age = parseInt($form.find('[name="age"]').val());
+    json.email = $form.find('[name="email"]').val();
+    json.password = $form.find('[name="password"]').val();
     json.rolesList = [];
 
-    const $options = $modalForm.find('[name="roles"] option:selected');
+    const $options = $form.find('[name="roles"] option:selected');
 
     for (const $option of $options) {
         json.rolesList.push($option.text);
     }
 
+    return JSON.stringify(json);
+}
+
+async function createUser($createForm) {
+    const user = retrieveData($createForm);
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+
+    const response = await fetch('/api/user',{
+        method: 'POST',
+        headers: headers,
+        body: user
+    });
+    if(!response.ok) {
+        throw `Network request for create user failed with response ${response.status}: ${response.statusText}`;
+    }
+}
+
+async function updateUser($modalForm) {
+    const user = retrieveData($modalForm);
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+
     const response = await fetch('/api/user',{
         method: 'PUT',
         headers: headers,
-        body: JSON.stringify(json)
+        body: user
     });
     if(!response.ok) {
         throw `Network request for update user failed with response ${response.status}: ${response.statusText}`;
@@ -61,16 +83,24 @@ async function removeUser(id) {
 }
 
 async function loadCreateForm() {
-    const rolesForm = $('.create-form  [name="roles"]');
+    const $form = $('.create-form')
+    const $rolesForm = $form.find('[name="roles"]');
     try{
         const allRoles = await getRoles();
         for (const role of allRoles) {
-            rolesForm.append(`<option>${role}</option>`);
+            $rolesForm.append(`<option>${role}</option>`);
         }
     } catch (e) {
         console.error(e);
     }
 
+    const $button = $form.find('.create-button');
+
+    $button.click(async function (){
+        await createUser($form);
+        await $('[href="#table"]').click()
+        await loadPageContent();
+    });
 }
 
 async function createModal(id) {

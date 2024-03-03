@@ -1,6 +1,6 @@
 <!-- Форма для создания пользователя -->
 <div class="container col-6 form-group text-center" th:fragment="create-form">
-    <form th:action="@{./create/}" method="POST">
+    <form>
         <div class ="form-group">
             <label><strong> First Name </strong></label>
             <label>
@@ -72,9 +72,10 @@
             <label for="newRoles"><strong> Role </strong></label>
             <select multiple class="form-control" id="newRoles" name="roles" required></select>
         </div>
-        <button type="submit" class = "btn btn-success btn-lg mt-3">
+
+        <div class="btn create-button btn-success btn-lg mt-3">
             Add new user
-        </button>
+        </div>
     </form>
 
 </div>

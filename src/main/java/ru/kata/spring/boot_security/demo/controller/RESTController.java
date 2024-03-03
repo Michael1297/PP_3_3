@@ -58,7 +58,8 @@ public class RESTController  {
             throw new InvalidUserException(errorMsg.toString());
         }
 
-        userService.add(user);
+        System.out.println(user);
+        //userService.add(user); todo
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
