@@ -82,10 +82,19 @@ async function removeUser(id) {
     }
 }
 
-async function loadCreateForm() {
-    const $form = $('.create-form')
+async function clearCreateForm() {
+    const $form = $('.create-form');
+
+    $form.find('[name="firstName"]').val('');
+    $form.find('[name="lastName"]').val('');
+    $form.find('[name="age"]').val('');
+    $form.find('[name="email"]').val('');
+    $form.find('[name="password"]').val('');
+
     const $rolesForm = $form.find('[name="roles"]');
-    try{
+    $rolesForm.empty();
+
+    try {
         const allRoles = await getRoles();
         for (const role of allRoles) {
             $rolesForm.append(`<option>${role}</option>`);
@@ -93,13 +102,23 @@ async function loadCreateForm() {
     } catch (e) {
         console.error(e);
     }
+}
+
+async function loadCreateForm() {
+    const $form = $('.create-form');
+    await clearCreateForm();
 
     const $button = $form.find('.create-button');
+
+    //id текущей нажатой кнопки в списке пользователей
+    const currentButtonId = $('.users-list  a[type="button"][class*="btn-primary"]').attr('id');
 
     $button.click(async function (){
         await createUser($form);
         await $('[href="#table"]').click()
         await loadPageContent();
+        await selectUserInList(currentButtonId);
+        await clearCreateForm();
     });
 }
 
@@ -165,9 +184,16 @@ function loadAdminTable(users) {
     }
 }
 
-function selectUserInList() {
-    const id = $('.users-list').attr('data-admin-id');
-    $(`.users-list > nav > a[id="${id}"]`).toggleClass('btn-light btn-primary');
+function selectUserInList(id = null) {
+    if(id === null) {
+        id = $('.users-list').attr('data-admin-id');
+    }
+    const $button = $(`.users-list > nav > a[id="${id}"]`);
+    if($button.length) {
+        $button.toggleClass('btn-light btn-primary');
+    } else {
+        $(`.users-list > nav > a:first-child`).click();
+    }
 }
 
 function loadUsersList(users) {
@@ -195,6 +221,9 @@ $(document).on('click', 'button.btn.update', async function (){
     //получить id пользователя
     const userId = $(this).attr('data-id');
 
+    //id текущей нажатой кнопки в списке пользователей
+    const buttonId = $('.users-list  a[type="button"][class*="btn-primary"]').attr('id');
+
     //создать модальное окно
     const $modal = await createModal(userId);
 
@@ -203,6 +232,7 @@ $(document).on('click', 'button.btn.update', async function (){
     $button.click(async function (){
         await updateUser($modal)
         await loadPageContent();
+        await selectUserInList(buttonId);
     });
     $modal.find('.modal-footer').append($button);
 
@@ -218,6 +248,9 @@ $(document).on('click', 'button.btn.update', async function (){
 $(document).on('click', 'button.btn.remove', async function () {
     //получить id пользователя
     const userId = $(this).attr('data-id');
+
+    //id текущей нажатой кнопки в списке пользователей
+    const buttonId = $('.users-list  a[type="button"][class*="btn-primary"]').attr('id');
 
     //создать модальное окно
     const $modal = await createModal(userId);
@@ -235,6 +268,7 @@ $(document).on('click', 'button.btn.remove', async function () {
     $button.click(async function (){
         await removeUser(userId);
         await loadPageContent();
+        await selectUserInList(buttonId);
     });
     $modal.find('.modal-footer').append($button);
 
