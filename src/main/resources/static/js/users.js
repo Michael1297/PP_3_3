@@ -1,27 +1,72 @@
-function createModal(id) {
+async function getUsers() {
+    const response = await fetch('/api/users');
+    if(!response.ok) {
+        throw `Network request for users.json failed with response ${response.status}: ${response.statusText}`;
+    }
+    return await response.json();
+}
+
+async function getRoles() {
+    const response = await fetch('/api/rolesList');
+    if(!response.ok) {
+        throw `Network request for rolesList.json failed with response ${response.status}: ${response.statusText}`;
+    }
+    return await response.json();
+}
+
+async function getUser(id) {
+    const response = await fetch(`/api/user/${id}`);
+    if(!response.ok) {
+        throw `Network request for user.json failed with response ${response.status}: ${response.statusText}`;
+    }
+    return await response.json();
+}
+
+async function removeUser(id) {
+    const response = await fetch(`/api/user/${id}`,{
+        method: 'DELETE'
+    });
+    if(!response.ok) {
+        throw `Network request for delete user failed with response ${response.status}: ${response.statusText}`;
+    }
+}
+
+async function loadCreateForm() {
+    const rolesForm = $('.create-form  [name="roles"]');
+    try{
+        const allRoles = await getRoles();
+        for (const role of allRoles) {
+            rolesForm.append(`<option>${role}</option>`);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+}
+
+async function createModal(id) {
     const $modal = $('#modalForm').clone();
 
-    fetch(`/api/user/${id}`).then(function (response) {
-        if(response.ok) {
-            response.json().then(user => {
-                //установить значения для полей
-                $modal.find('[name="id"]').val(user.id);
-                $modal.find('[name="firstName"]').val(user.firstName);
-                $modal.find('[name="lastName"]').val(user.lastName);
-                $modal.find('[name="age"]').val(user.age);
-                $modal.find('[name="email"]').val(user.email);
-                $modal.find('[name="password"]').val(user.password);
+    try {
+        const user = await getUser(id);
+        //установить значения для полей
+        $modal.find('[name="id"]').val(user.id);
+        $modal.find('[name="firstName"]').val(user.firstName);
+        $modal.find('[name="lastName"]').val(user.lastName);
+        $modal.find('[name="age"]').val(user.age);
+        $modal.find('[name="email"]').val(user.email);
+        $modal.find('[name="password"]').val(user.password);
 
-                //сделать чтобы роли у пользователя были выбраны
-                const roles = $modal.find('[name="roles"] > option');
-                for (const role of roles) {
-                    role.selected = user.rolesList.includes(role.text);
-                }
-            });
-        } else {
-            console.error(`Network request for user.json failed with response ${response.status}: ${response.statusText}`);
+        const rolesForm = $modal.find('[name="roles"]');
+        const allRoles = await getRoles();
+        for (const role of allRoles) {
+            const $option = $(`<option>${role}</option>`);
+            $option.prop('selected', user.rolesList.includes(role));
+            rolesForm.append($option);
         }
-    });
+    } catch (e) {
+        console.error(e);
+    }
 
     return $modal;
 }
@@ -76,53 +121,47 @@ function loadUsersList(users) {
     }
 }
 
-function loadPageContent(isInitPage = false) {
-    fetch('/api/users').then(function (response){
-        if(response.ok) {
-            response.json().then(users => {
-                loadUsersList(users);
-                loadAdminTable(users);
-                if(isInitPage) {
-                    selectUserInList();
-                }
-            });
-        } else {
-            console.error(`Network request for users.json failed with response ${response.status}: ${response.statusText}`);
-        }
-    });
+async function loadPageContent() {
+    try{
+        const users = await getUsers();
+        loadUsersList(users);
+        loadAdminTable(users);
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 //нажатие на кнопку обновить в таблице администратора
-$(document).on('click', 'button.btn.update', function (){
+$(document).on('click', 'button.btn.update', async function (){
     //получить id пользователя
     const userId = $(this).attr('data-id');
 
     //создать модальное окно
-    const $modal = createModal(userId);
+    const $modal = await createModal(userId);
 
     //указание ссылки на изменения данных при нажатии на кнопку
     $modal.find('form').attr('action', `./edit/${userId}`);
     $modal.find('form').attr('method', 'POST');
 
     //добавить кнопку
-    const button = $('<button type="submit" class="btn btn-primary">Edit</button>');
-    $modal.find('.modal-footer').append(button);
+    const $button = $('<button type="submit" class="btn btn-primary">Edit</button>');
+    $modal.find('.modal-footer').append($button);
 
     //Заголовок модального окна
-    const title = $('<h4 class="modal-title">Edit User</h4>');
-    $modal.find('.modal-header').append(title);
+    const $title = $('<h4 class="modal-title">Edit User</h4>');
+    $modal.find('.modal-header').append($title);
 
     //show dialog
     $modal.modal();
 });
 
 //нажатие на кнопку удалить в таблице администратора
-$(document).on('click', 'button.btn.remove', function () {
+$(document).on('click', 'button.btn.remove', async function () {
     //получить id пользователя
     const userId = $(this).attr('data-id');
 
     //создать модальное окно
-    const $modal = createModal(userId);
+    const $modal = await createModal(userId);
 
     //выключить поля
     $modal.find('[name="firstName"]').prop('disabled', true);
@@ -132,17 +171,16 @@ $(document).on('click', 'button.btn.remove', function () {
     $modal.find('[name="password"]').prop('disabled', true);
     $modal.find('[name="roles"]').prop('disabled', true);
 
-    //указание ссылки на изменения данных при нажатии на кнопку
-    $modal.find('form').attr('action', `./remove/${userId}`);
-    $modal.find('form').attr('method', 'GET');
-
     //добавить кнопку
-    const button = $('<button type="submit" class="btn btn-danger">Delete</button>');
-    $modal.find('.modal-footer').append(button);
+    const $button = $('<button class="btn btn-danger" data-dismiss="modal">Delete</button>');
+    $button.click(async function (){
+        await removeUser(userId);
+    });
+    $modal.find('.modal-footer').append($button);
 
     //Заголовок модального окна
-    const title = $('<h4 class="modal-title">Delete User</h4>');
-    $modal.find('.modal-header').append(title);
+    const $title = $('<h4 class="modal-title">Delete User</h4>');
+    $modal.find('.modal-header').append($title);
 
     //show dialog
     $modal.modal();
@@ -177,7 +215,9 @@ $(document).on('click', '.users-list  a[type="button"]', function (){
 
 // Инициализация при загрузке документа
 $(document).ready(
-    () => {
-        loadPageContent(true);
+    async () => {
+        await loadPageContent();
+        await selectUserInList();
+        await loadCreateForm();
     }
 );

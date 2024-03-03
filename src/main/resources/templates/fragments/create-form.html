@@ -1,8 +1,6 @@
 <!-- Форма для создания пользователя -->
 <div class="container col-6 form-group text-center" th:fragment="create-form">
     <form th:action="@{./create/}" method="POST">
-        <input th:name="${_csrf.parameterName}" type="hidden" th:value="${_csrf.token}" />
-
         <div class ="form-group">
             <label><strong> First Name </strong></label>
             <label>
@@ -72,13 +70,7 @@
 
         <div class ="form-group">
             <label for="newRoles"><strong> Role </strong></label>
-            <select multiple class="form-control" id="newRoles" name="roles" required>
-                <option th:each="role: ${roles}"
-                        th:value="${role.id}"
-                        th:text="${role}"
-                >
-                </option>
-            </select>
+            <select multiple class="form-control" id="newRoles" name="roles" required></select>
         </div>
         <button type="submit" class = "btn btn-success btn-lg mt-3">
             Add new user

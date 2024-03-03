@@ -10,7 +10,6 @@
                 </span>
             </div>
             <form id="logout-form" th:action= "@{/logout}" method="POST">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class = "btn btn-link" style="color: darkgray">Logout</button>
             </form>
         </dl>
