@@ -62,9 +62,8 @@ public class RESTController  {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable long id,
-                                                 @RequestBody @Valid User user,
+    @PutMapping("/user")
+    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user,
                                                  BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -78,7 +77,8 @@ public class RESTController  {
             throw new InvalidUserException(errorMsg.toString());
         }
 
-        userService.updateUser(id, user);
+        System.out.println(user);
+        //userService.updateUser(user.getId(), user); //todo remove getId
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

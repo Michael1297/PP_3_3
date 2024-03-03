@@ -22,6 +22,35 @@ async function getUser(id) {
     return await response.json();
 }
 
+async function updateUser($modalForm) {
+    const json = {};
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+
+    json.id = parseInt($modalForm.find('[name="id"]').val());
+    json.firstName = $modalForm.find('[name="firstName"]').val();
+    json.lastName = $modalForm.find('[name="lastName"]').val();
+    json.age = parseInt($modalForm.find('[name="age"]').val());
+    json.email = $modalForm.find('[name="email"]').val();
+    json.password = $modalForm.find('[name="password"]').val();
+    json.rolesList = [];
+
+    const $options = $modalForm.find('[name="roles"] option:selected');
+
+    for (const $option of $options) {
+        json.rolesList.push($option.text);
+    }
+
+    const response = await fetch('/api/user',{
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(json)
+    });
+    if(!response.ok) {
+        throw `Network request for update user failed with response ${response.status}: ${response.statusText}`;
+    }
+}
+
 async function removeUser(id) {
     const response = await fetch(`/api/user/${id}`,{
         method: 'DELETE'
@@ -139,12 +168,12 @@ $(document).on('click', 'button.btn.update', async function (){
     //создать модальное окно
     const $modal = await createModal(userId);
 
-    //указание ссылки на изменения данных при нажатии на кнопку
-    $modal.find('form').attr('action', `./edit/${userId}`);
-    $modal.find('form').attr('method', 'POST');
-
     //добавить кнопку
-    const $button = $('<button type="submit" class="btn btn-primary">Edit</button>');
+    const $button = $('<button class="btn btn-primary" data-dismiss="modal">Edit</button>');
+    $button.click(async function (){
+        await updateUser($modal)
+        await loadPageContent();
+    });
     $modal.find('.modal-footer').append($button);
 
     //Заголовок модального окна
@@ -175,6 +204,7 @@ $(document).on('click', 'button.btn.remove', async function () {
     const $button = $('<button class="btn btn-danger" data-dismiss="modal">Delete</button>');
     $button.click(async function (){
         await removeUser(userId);
+        await loadPageContent();
     });
     $modal.find('.modal-footer').append($button);
 
