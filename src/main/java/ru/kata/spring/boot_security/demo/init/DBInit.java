@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Component
 public class DBInit {
@@ -30,12 +29,8 @@ public class DBInit {
         roleService.addRole(adminRole);
         roleService.addRole(userRole);
 
-        Set<Role> adminRoles = new TreeSet<>();
-        adminRoles.add(roleService.getByName(adminRole.getName()));
-        adminRoles.add(roleService.getByName(userRole.getName()));
-
-        Set<Role> userRoles = new TreeSet<>();
-        userRoles.add(roleService.getByName(userRole.getName()));
+        Set<Role> adminRoles = Set.of(adminRole, userRole);
+        Set<Role> userRoles = Set.of(userRole);
 
         User admin = new User("admin", "admin", 25, "admin@admin.com", "admin", adminRoles);
         User user = new User("user", "user", 19, "user@user.com", "user", userRoles);

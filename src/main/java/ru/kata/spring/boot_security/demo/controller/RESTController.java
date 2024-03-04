@@ -58,8 +58,7 @@ public class RESTController  {
             throw new InvalidUserException(errorMsg.toString());
         }
 
-        System.out.println(user);
-        //userService.add(user); todo
+        userService.add(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -78,8 +77,7 @@ public class RESTController  {
             throw new InvalidUserException(errorMsg.toString());
         }
 
-        System.out.println(user);
-        //userService.updateUser(user.getId(), user); //todo remove getId
+        userService.updateUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
