@@ -79,7 +79,7 @@ public class UserServiceImp implements UserService {
       }
 
       Set<Role> roles = user.getRoles().stream().map(Role::getName).map(roleService::getByName).collect(Collectors.toSet());
-      user.setRoles(roles);
+      existingUser.setRoles(roles);
 
       userRepository.save(existingUser);
    }
