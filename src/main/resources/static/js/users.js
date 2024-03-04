@@ -100,10 +100,8 @@ $(document).on('click', '.users-list  a[type="button"]', function (){
 });
 
 // Инициализация при загрузке документа
-$(document).ready(
-    async () => {
-        await loadPageContent();
-        await selectUserInList();
-        await loadCreateForm();
-    }
-);
+$(document).ready( async () => {
+    await loadPageContent();
+    await selectUserInList();
+    await loadCreateForm();
+});
