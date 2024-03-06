@@ -1,4 +1,4 @@
-import {getUsers} from "./get_data.js";
+import {getCurrentUser, getUsers} from "./get_data.js";
 import {loadUsersList} from "./users_list.js";
 import {loadAdminTable} from "./table.js";
 

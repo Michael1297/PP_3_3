@@ -1,5 +1,5 @@
 export async function getUsers() {
-    const response = await fetch('/api/users');
+    const response = await fetch('/api/admin/users');
     if(!response.ok) {
         throw `Network request for users.json failed with response ${response.status}: ${response.statusText}`;
     }
@@ -15,7 +15,7 @@ export async function getCurrentUser(type = "admin") {
 }
 
 export async function getUser(id) {
-    const response = await fetch(`/api/user/${id}`);
+    const response = await fetch(`/api/admin/user/${id}`);
     if(!response.ok) {
         throw `Network request for user.json failed with response ${response.status}: ${response.statusText}`;
     }
@@ -23,7 +23,7 @@ export async function getUser(id) {
 }
 
 export async function getRoles() {
-    const response = await fetch('/api/rolesList');
+    const response = await fetch('/api/admin/rolesList');
     if(!response.ok) {
         throw `Network request for rolesList.json failed with response ${response.status}: ${response.statusText}`;
     }

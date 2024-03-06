@@ -6,7 +6,7 @@ import loadHeader from "./modules/header.js"
 $(document).ready( async () => {
     try {
         const $usersList = $(document).find('.users-list');
-        const user = await getCurrentUser();
+        const user = await getCurrentUser('user');
 
         const button = `<a type="button" class="btn btn-primary pl-5 pr-5" id="${user.id}">${user.email}</a>`;
         $usersList.find('nav').append(button);

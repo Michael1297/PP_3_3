@@ -24,7 +24,7 @@ export async function createUser($createForm) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json; charset=utf-8');
 
-    const response = await fetch('/api/user',{
+    const response = await fetch('/api/admin/user',{
         method: 'POST',
         headers: headers,
         body: user
@@ -39,7 +39,7 @@ export async function updateUser($modalForm) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json; charset=utf-8');
 
-    const response = await fetch('/api/user',{
+    const response = await fetch('/api/admin/user',{
         method: 'PUT',
         headers: headers,
         body: user
@@ -50,7 +50,7 @@ export async function updateUser($modalForm) {
 }
 
 export async function removeUser(id) {
-    const response = await fetch(`/api/user/${id}`,{
+    const response = await fetch(`/api/admin/user/${id}`,{
         method: 'DELETE'
     });
     if(!response.ok) {

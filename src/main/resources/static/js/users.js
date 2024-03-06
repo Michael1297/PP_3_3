@@ -7,6 +7,8 @@ import {updateUserTable} from './modules/table.js'
 import {selectUserInList} from './modules/users_list.js'
 
 import loadPageContent from './modules/page_content.js'
+import {getCurrentUser} from "./modules/get_data.js";
+import loadHeader from "./modules/header.js";
 
 //нажатие на кнопку обновить в таблице администратора
 $(document).on('click', 'button.btn.update', async function (){
@@ -81,7 +83,7 @@ $(document).on('click', '.users-list  a[type="button"]', function (){
     $('.users-list  a[type="button"][class*="btn-primary"]').toggleClass('btn-primary btn-light');
     $btn.toggleClass('btn-light btn-primary');
 
-    fetch(`/api/user/${id}`).then(function (response) {
+    fetch(`/api/admin/user/${id}`).then(function (response) {
         if(response.ok) {
             response.json().then(user => {
                 if(user.rolesList.includes('ADMIN')) {
@@ -99,8 +101,15 @@ $(document).on('click', '.users-list  a[type="button"]', function (){
     });
 });
 
+async function setCurrentUser() {
+    const user = await getCurrentUser();
+    $('.users-list').attr('data-user-id', user.id);
+    loadHeader(user);
+}
+
 // Инициализация при загрузке документа
 $(document).ready( async () => {
+    await setCurrentUser();
     await loadPageContent();
     await selectUserInList();
     await loadCreateForm();
