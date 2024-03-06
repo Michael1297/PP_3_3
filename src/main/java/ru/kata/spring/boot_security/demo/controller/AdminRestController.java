@@ -30,14 +30,9 @@ public class AdminRestController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public ResponseEntity<User> getAuthUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(user);
-    }
-
     @GetMapping("/current")
-    public ResponseEntity<User> getCurrentUser(Principal principal) {
-        return new ResponseEntity<>(userService.findUserByEmail(principal.getName()), HttpStatus.OK);
+    public User getCurrentUser(Principal principal) {
+        return userService.findUserByEmail(principal.getName());
     }
 
     @GetMapping("/users")
