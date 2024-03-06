@@ -6,6 +6,14 @@ export async function getUsers() {
     return await response.json();
 }
 
+export async function getCurrentUser(type = "admin") {
+    const response = await fetch(`/api/${type}/current`);
+    if(!response.ok) {
+        throw `Network request for user.json failed with response ${response.status}: ${response.statusText}`;
+    }
+    return await response.json();
+}
+
 export async function getUser(id) {
     const response = await fetch(`/api/user/${id}`);
     if(!response.ok) {

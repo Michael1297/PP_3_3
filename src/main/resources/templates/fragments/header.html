@@ -1,12 +1,12 @@
 <!-- Заголовок окна -->
 <header th:fragment="header">
-    <div class="container-fluid" th:object = "${user}">
+    <div class="container-fluid">
         <dl class="row p-2 bg-dark">
             <div class="col-11 text-left">
                 <span class="text-white" style="font-size: large">
-                    <strong><a th:text="${user.email}"></a></strong>
+                    <strong><a id="email"></a></strong>
                     with roles:
-                    <a th:text="${#strings.setJoin(user.roles, ' ')}"></a>
+                    <a id="roles"></a>
                 </span>
             </div>
             <form id="logout-form" th:action= "@{/logout}" method="POST">
